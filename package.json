@@ -1,0 +1,38 @@
+{
+  "name": "powerbot-messenger",
+  "version": "1.0.0",
+  "description": "A package for Messenger Platform support in Node.js",
+  "main": "index.js",
+  "scripts": {
+    "test": "node node_modules/mocha/bin/mocha"
+  },
+  "author": "Maksymilian Tomczyk <m.tomczyk.dev@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "koa-router": "^7.4.0"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "mocha": "^6.2.0"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chatbots-pl/powerbot-messenger.git"
+  },
+  "keywords": [
+    "messenger",
+    "messenger-platform",
+    "chatbot",
+    "messenger-chatbot",
+    "facebook-messenger",
+    "messenger-api"
+  ],
+  "bugs": {
+    "url": "https://github.com/chatbots-pl/powerbot-messenger/issues"
+  },
+  "homepage": "https://github.com/chatbots-pl/powerbot-messenger#readme"
+}
