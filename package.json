@@ -1,5 +1,5 @@
 {
-  "name": "powerbot-messenger",
+  "name": "@chatbots-pl/powerbot-messenger",
   "version": "1.0.0",
   "description": "A package for Messenger Platform support in Node.js",
   "main": "index.js",

@@ -55,6 +55,7 @@ class Server {
                 m.recipient_id = message.recipient.id
                 m.reply = new Sender(that.config, message.recipient.id, that.emmiter)
                 that.emitter.emit('echo', m, message)
+                ctx.status = 200
                 return
               }
 
