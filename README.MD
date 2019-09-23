@@ -1,50 +1,55 @@
 # Powerbot Messenger 🤖
 This package is based on code of incredbot library and it's continuation.
 
-- [**Broadcast API Note**](#--broadcast-api-note--)
-- [Including](#including)
-    + [Configuration options](#configuration-options)
-- [Server](#server)
-  * [Starting server](#starting-server)
-  * [Catching events](#catching-events)
-  * [Server events](#server-events)
-  * [Formed Message vs Raw Message](#formed-message-vs-raw-message)
-- [Sender](#sender)
-  * [Methods](#methods)
-    + [`text(message, options)`](#-text-message--options--)
-    + [`quickReplies(message, replies, options)`](#-quickreplies-message--replies--options--)
-    + [`buttons(text, buttons, options)`](#-buttons-text--buttons--options--)
-    + [`attachment(type, url, options)`](#-attachment-type--url--options--)
-    + [`generic(elements, options)`](#-generic-elements--options--)
-- [Helpers](#helpers)
-  * [Button](#button)
-  * [Generic Message](#generic-message)
-  * [Get Started Button](#get-started-button)
-  * [Greeting](#greeting)
-  * [Quick Reply](#quick-reply)
-- [User object](#user-object)
-  * [Get user data](#get-user-data)
-  * [Send message](#send-message)
-- [Static elements](#static-elements)
-  * [`pbm.send.setting(data)`](#-pbmsendsetting-data--)
-    + [Greeting](#greeting-1)
-    + [Get Started Button](#get-started-button-1)
-    + [Persistent Menu](#persistent-menu)
-- [Natural typing](#natural-typing)
-- [Generator Module](#generator-module)
-  * [Supported types](#supported-types)
-    + [Text](#text)
-    + [Quick Replies](#quick-replies)
-    + [Buttons](#buttons)
-    + [Generic](#generic)
-  * [Frame class](#frame-class)
-- [Comments interaction](#comments-interaction)
-  * [Private Reply](#private-reply)
-- [Uploader module](#uploader-module)
-  * [Upload from URL](#upload-from-url)
-- [Examples](#examples)
-  * [Echo bot full example](#echo-bot-full-example)
-- [License](#license)
+- [Powerbot Messenger 🤖](#powerbot-messenger-%f0%9f%a4%96)
+  - [**Broadcast API Note**](#broadcast-api-note)
+  - [Including](#including)
+      - [Configuration options](#configuration-options)
+  - [Server](#server)
+    - [Starting server](#starting-server)
+    - [Catching events](#catching-events)
+    - [Server events](#server-events)
+    - [Formed Message vs Raw Message](#formed-message-vs-raw-message)
+  - [Sender](#sender)
+    - [Methods](#methods)
+      - [`text(message, options)`](#textmessage-options)
+      - [`quickReplies(message, replies, options)`](#quickrepliesmessage-replies-options)
+      - [`buttons(text, buttons, options)`](#buttonstext-buttons-options)
+      - [`attachment(type, url, options)`](#attachmenttype-url-options)
+      - [`generic(elements, options)`](#genericelements-options)
+  - [Helpers](#helpers)
+    - [Button](#button)
+    - [Generic Message](#generic-message)
+    - [Get Started Button](#get-started-button)
+    - [Greeting](#greeting)
+    - [Quick Reply](#quick-reply)
+  - [User object](#user-object)
+    - [Get user data](#get-user-data)
+    - [Send message](#send-message)
+  - [Static elements](#static-elements)
+    - [`pbm.send.setting(data)`](#pbmsendsettingdata)
+      - [Greeting](#greeting-1)
+      - [Get Started Button](#get-started-button-1)
+      - [Persistent Menu](#persistent-menu)
+  - [Natural typing](#natural-typing)
+  - [Generator Module](#generator-module)
+    - [Supported types](#supported-types)
+      - [Text](#text)
+      - [Quick Replies](#quick-replies)
+      - [Buttons](#buttons)
+      - [Generic](#generic)
+    - [Frame class](#frame-class)
+      - [`options`](#options)
+      - [Normal response](#normal-response)
+      - [Message tag](#message-tag)
+      - [Message tag shorthand](#message-tag-shorthand)
+  - [Comments interaction](#comments-interaction)
+    - [Private Reply](#private-reply)
+  - [Uploader module](#uploader-module)
+    - [Upload from URL](#upload-from-url)
+  - [Examples](#examples)
+    - [Echo bot full example](#echo-bot-full-example)
+  - [License](#license)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
 
@@ -55,7 +60,7 @@ As Broadcast API is not a part of Messenger Platform API v4.0, module providing 
 ## Including
 
 ```javascript
-const PowerbotMessenger = require('powerbot-messenger')
+const PowerbotMessenger = require('@chatbots-pl/powerbot-messenger')
 const pbm = new PowerbotMessenger({
     access_token: config.facebook.access_token
 })
@@ -65,15 +70,15 @@ Configuration object should be passed like `new PowerbotMessenger(configObject)`
 
 #### Configuration options
 
-| Name                   | Descrition                                          | Type   | Default |
-| ---------------------- | --------------------------------------------------- | ------ | ------- |
-| `access_token`         | App's access token for desired page                 | string | null    |
-| `api_version`          | Graph API version to use inrequests                 | string | 'v4.0' |
-| `natural_typing`       | Enable or disable natural typing feature            | bool   | true    |
-| `natural_typing_speed` | Speed of message typing in characters per second    | int    | 50      |
-| `log_level`            | Logging level, one of: debug, info, warning, error or off  | string | 'debug' |
-| `log_to_console`       | Enables or disables Powerbot Messenger logger console output | bool   | true    |
-| `endpoint`       | Sets endpoint to listen on | string   | '/webhook'    |
+| Name                   | Descrition                                                   | Type   | Default    |
+| ---------------------- | ------------------------------------------------------------ | ------ | ---------- |
+| `access_token`         | App's access token for desired page                          | string | null       |
+| `api_version`          | Graph API version to use inrequests                          | string | 'v4.0'     |
+| `natural_typing`       | Enable or disable natural typing feature                     | bool   | true       |
+| `natural_typing_speed` | Speed of message typing in characters per second             | int    | 50         |
+| `log_level`            | Logging level, one of: debug, info, warning, error or off    | string | 'debug'    |
+| `log_to_console`       | Enables or disables Powerbot Messenger logger console output | bool   | true       |
+| `endpoint`             | Sets endpoint to listen on                                   | string | '/webhook' |
 
 ## Server
 
@@ -82,7 +87,7 @@ Configuration object should be passed like `new PowerbotMessenger(configObject)`
 ```javascript
 const Koa = require('koa')
 const bodyParser = require('koa-bodyparser')
-const PowerbotMessenger = require('powerbot-messenger')
+const PowerbotMessenger = require('@chatbots-pl/powerbot-messenger')
 const pbm = new PowerbotMessenger(config)
 const app = new Koa()
 
@@ -116,13 +121,13 @@ bot.on('text', async (message, raw) => {
 
 ### Server events
 
-| Event            | Description                                                  | Passed parameters                |
-| ---------------- | ------------------------------------------------------------ | -------------------------------- |
-| request_incoming | Every request to your webhook                                | `body`, `ctx`                |
-| request_outgoing | Every request sent from bot via Powerbot Messenger library            | `body`, `ctx`               |
-| log              | Any log from Powerbot Messenger (except throwed errors)               | `logObject`                      |
-| message_sent     | Every message sent from bot via Powerbot Messenger library            | `body`, `ctx`               |
-| entry            | Each entry in received object                                | `entry`                          |
+| Event            | Description                                                  | Passed parameters             |
+| ---------------- | ------------------------------------------------------------ | ----------------------------- |
+| request_incoming | Every request to your webhook                                | `body`, `ctx`                 |
+| request_outgoing | Every request sent from bot via Powerbot Messenger library   | `body`, `ctx`                 |
+| log              | Any log from Powerbot Messenger (except throwed errors)      | `logObject`                   |
+| message_sent     | Every message sent from bot via Powerbot Messenger library   | `body`, `ctx`                 |
+| entry            | Each entry in received object                                | `entry`                       |
 | echo             | Any message sent by bot (every message with `is_echo: true`) | `formedMessage`, `rawMessage` |
 | message          | Any message received (each object of `entry.messaging`)      | `formedMessage`, `rawMessage` |
 | text             | Text message received                                        | `formedMessage`, `rawMessage` |
@@ -132,7 +137,7 @@ bot.on('text', async (message, raw) => {
 | payload          | Any payload received (button or quick reply)                 | `formedMessage`, `rawMessage` |
 | postback         | Payload from button reveived                                 | `formedMessage`, `rawMessage` |
 | quick_reply      | Payload from quick reply received                            | `formedMessage`, `rawMessage` |
-| change           | Each change in received object (ex. new comment on page)     | `rawChange`                      |
+| change           | Each change in received object (ex. new comment on page)     | `rawChange`                   |
 | comment          | Each comment action on page                                  | `formedChange`, `rawChange`   |
 
 ### Formed Message vs Raw Message
@@ -424,15 +429,42 @@ const message = new pbm.Message.Generic(cards)
 
 `pbm.Frame(message, recipient_id, options)`
 
-Above examples of supported messages shows how to use Generator module. Any generator returns only message body. It means that there isn's recipient object etc and message is **compatible only with Broadcast API Creative Message**. If you want to send message from creator as reply to message you will have to use MessageFrame class, which is accessible as `pbm.Frame`
+Above examples of supported messages shows how to use Generator module. Any generator returns only message body. It means that there isn's recipient object etc and message is **compatible only with Broadcast API Creative Message (which is depracated now)**. If you want to send message from creator as reply to message you will have to use MessageFrame class, which is accessible as `pbm.Frame`
 
 When message is in frame you can send it using `pbm.send.raw()` or `message.reply.raw()` (if reply object is available). This is exactly the same, because message in frame has already defined recipient id.
 
+#### `options`
+| Option         | Type   | Description                                                |
+| -------------- | ------ | ---------------------------------------------------------- |
+| messaging_type | String | Messaging type param, if desired other than 'RESPONSE'     |
+| tag            | String | Message tag in case of messaging_type set to 'MESSAGE_TAG' |
+
+As options you can pass also string, which will be treated as `tag`. In that case, messaging_type will be automatically set to 'MESSAGE_TAG'.
+
+#### Normal response
 ```javascript
 const message = new pbm.Message.Text('Text message created with Generator class')
 const framedMessage = new pbm.Frame(message, '1489852771114961')
 await pbm.send.raw(framedMessage)
 ```
+
+#### Message tag
+```javascript
+const message = new pbm.Message.Text('Text message created with Generator class')
+const framedMessage = new pbm.Frame(message, '1489852771114961', {
+  messaging_type: 'MESSAGE_TAG',
+  tag: 'NON_PROMOTIONAL_SUBSCRIPTION'
+})
+await pbm.send.raw(framedMessage)
+```
+
+#### Message tag shorthand
+```javascript
+const message = new pbm.Message.Text('Text message created with Generator class')
+const framedMessage = new pbm.Frame(message, '1489852771114961', 'NON_PROMOTIONAL_SUBSCRIPTION')
+await pbm.send.raw(framedMessage)
+```
+
 
 ## Comments interaction
 
@@ -471,7 +503,7 @@ Sends attachment upload request and return uploaded attachment ID. Type param mu
 ```javascript
 const Koa = require('koa')
 const bodyParser = require('koa-bodyparser')
-const PowerbotMessenger = require('powerbot-messenger')
+const PowerbotMessenger = require('@chatbots-pl/powerbot-messenger')
 
 const pbMessenger = new PowerbotMessenger({
   access_token: '<ACCESS_TOKEN>'
