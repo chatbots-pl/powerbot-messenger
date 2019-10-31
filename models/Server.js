@@ -86,7 +86,7 @@ class Server {
                 m.payload = message.postback.payload
                 that.emitter.emit('postback', m, message)
                 that.emitter.emit('payload', m, message)
-              } else if (message.message.quick_reply) {
+              } else if (message.message && message.message.quick_reply) {
                 m.payload = message.message.quick_reply.payload
                 that.emitter.emit('quick_reply', m, message)
                 that.emitter.emit('payload', m, message)
