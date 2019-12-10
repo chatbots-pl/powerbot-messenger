@@ -88,7 +88,8 @@ describe('Frame Class', function () {
     const btns = [new pbm.Helpers.Button('web_url', 'Button', 'https://google.com')]
     const m = new pbm.Message.Buttons('Testing...', btns)
     const framed = new pbm.Frame(m, config.testUserId, {
-      messaging_type: 'MESSAGE_TAG'
+      messaging_type: 'MESSAGE_TAG',
+      tag: 'POST_PURCHASE_UPDATE'
     })
 
     const correct = {
@@ -107,9 +108,10 @@ describe('Frame Class', function () {
         }
       },
       messaging_type: 'MESSAGE_TAG',
+      tag: 'POST_PURCHASE_UPDATE',
       recipient: {
         id: config.testUserId
-      }
+      },
     }
     expect(framed).to.deep.equal(correct)
   })
@@ -118,7 +120,8 @@ describe('Frame Class', function () {
     const m = new pbm.Message.Buttons('Testing...', btns)
     const framed = new pbm.Frame(m, {
       messaging_type: 'MESSAGE_TAG',
-      recipient_id: config.testUserId
+      recipient_id: config.testUserId,
+      tag: 'POST_PURCHASE_UPDATE'
     })
 
     const correct = {
@@ -139,7 +142,8 @@ describe('Frame Class', function () {
       messaging_type: 'MESSAGE_TAG',
       recipient: {
         id: config.testUserId
-      }
+      },
+      tag: 'POST_PURCHASE_UPDATE'
     }
     expect(framed).to.deep.equal(correct)
   })
