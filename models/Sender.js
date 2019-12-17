@@ -4,6 +4,7 @@ const MessageBase = require('./MessageBase.js')
 const TemplateBase = require('./TemplateBase.js')
 const Attachment = require('./AttachmentMessage.js')
 const Typer = require('./Typer.js')
+const Logger = require('../modules/logger')
 
 const createError = require('../modules/create_error')
 
@@ -19,6 +20,7 @@ class Sender {
     this.natural_typing = config.natural_typing || true
     this.natural_typing_speed = config.natural_typing_speed || 50
     this.typing = new Typer(config, emitter)
+    this.log = new Logger(this.config, 'sender', emitter)
     this.emitter = emitter
   }
 
@@ -37,7 +39,7 @@ class Sender {
 
   calculateTypingTime (text) {
     const cps = this.natural_typing_speed
-    let time = Math.round((text.length / cps) * 1000)
+    const time = Math.round((text.length / cps) * 1000)
     if (time < 5000) return time
     else return 5000
   }
@@ -50,7 +52,7 @@ class Sender {
     else optionsCopy = {}
     optionsCopy.text = text
     optionsCopy.recipient_id = this.recipient_id || options.recipient_id
-    let message = new MessageFrame(new MessageBase(optionsCopy), optionsCopy)
+    const message = new MessageFrame(new MessageBase(optionsCopy), optionsCopy)
 
     return this.raw(message)
   }
@@ -65,14 +67,14 @@ class Sender {
     optionsCopy.recipient_id = this.recipient_id || options.recipient_id
     optionsCopy.replies = replies
 
-    let message = new MessageFrame(new MessageBase(optionsCopy), optionsCopy)
+    const message = new MessageFrame(new MessageBase(optionsCopy), optionsCopy)
 
     return this.raw(message)
   }
 
   buttons (text, buttons, replies, options) {
     if (!text) throw createError('Message text can\'t be empty!')
-    let optionsCopy = {}
+    const optionsCopy = {}
 
     if (options) Object.assign(optionsCopy, options)
     else if (!Array.isArray(replies) && typeof (replies) === 'object') Object.assign(optionsCopy, replies)
@@ -84,7 +86,7 @@ class Sender {
     optionsCopy.recipient_id = this.recipient_id || optionsCopy.recipient_id
     optionsCopy.buttons = buttons
 
-    let message = new MessageFrame(new TemplateBase(optionsCopy), optionsCopy)
+    const message = new MessageFrame(new TemplateBase(optionsCopy), optionsCopy)
 
     return this.raw(message)
   }
@@ -106,7 +108,7 @@ class Sender {
     optionsCopy.recipient_id = this.recipient_id || options.recipient_id
     optionsCopy.generics = elements
 
-    let message = new MessageFrame(new TemplateBase(optionsCopy), optionsCopy)
+    const message = new MessageFrame(new TemplateBase(optionsCopy), optionsCopy)
     return this.raw(message)
   }
 
@@ -117,7 +119,7 @@ class Sender {
     options.url = url
     options.type = type
 
-    let message = new Attachment(options)
+    const message = new Attachment(options)
     return this.raw(message)
   }
 }

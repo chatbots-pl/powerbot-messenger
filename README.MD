@@ -71,14 +71,15 @@ Configuration object should be passed like `new PowerbotMessenger(configObject)`
 #### Configuration options
 
 | Name                   | Descrition                                                   | Type   | Default    |
-| ---------------------- | ------------------------------------------------------------ | ------ | ---------- |
+|------------------------|--------------------------------------------------------------|--------|------------|
 | `access_token`         | App's access token for desired page                          | string | null       |
-| `api_version`          | Graph API version to use inrequests                          | string | 'v4.0'     |
-| `natural_typing`       | Enable or disable natural typing feature                     | bool   | true       |
-| `natural_typing_speed` | Speed of message typing in characters per second             | int    | 50         |
+| `api_version`          | Graph API version to use inrequests                          | string | 'v5.0'     |
+| `endpoint`             | Sets endpoint to listen on                                   | string | '/webhook' |
 | `log_level`            | Logging level, one of: debug, info, warning, error or off    | string | 'debug'    |
 | `log_to_console`       | Enables or disables Powerbot Messenger logger console output | bool   | true       |
-| `endpoint`             | Sets endpoint to listen on                                   | string | '/webhook' |
+| `mark_seen`            | Automatically check received messages as seen                | bool   | true       |
+| `natural_typing_speed` | Speed of message typing in characters per second             | int    | 50         |
+| `natural_typing`       | Enable or disable natural typing feature                     | bool   | true       |
 
 ## Server
 
@@ -122,7 +123,7 @@ bot.on('text', async (message, raw) => {
 ### Server events
 
 | Event            | Description                                                  | Passed parameters             |
-| ---------------- | ------------------------------------------------------------ | ----------------------------- |
+|------------------|--------------------------------------------------------------|-------------------------------|
 | request_incoming | Every request to your webhook                                | `body`, `ctx`                 |
 | request_outgoing | Every request sent from bot via Powerbot Messenger library   | `body`, `ctx`                 |
 | log              | Any log from Powerbot Messenger (except throwed errors)      | `logObject`                   |
@@ -435,7 +436,7 @@ When message is in frame you can send it using `pbm.send.raw()` or `message.repl
 
 #### `options`
 | Option         | Type   | Description                                                |
-| -------------- | ------ | ---------------------------------------------------------- |
+|----------------|--------|------------------------------------------------------------|
 | messaging_type | String | Messaging type param, if desired other than 'RESPONSE'     |
 | tag            | String | Message tag in case of messaging_type set to 'MESSAGE_TAG' |
 

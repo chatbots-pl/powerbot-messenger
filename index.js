@@ -12,8 +12,9 @@ class PowerbotMessenger {
   constructor (config) {
     config = config || {}
     this.config = config
-    this.config.api_version = this.config.api_version || 'v4.0'
+    this.config.api_version = this.config.api_version || 'v5.0'
     this.config.endpoint = this.config.endpoint || '/webhook'
+    this.config.mark_seen = (typeof config.mark_seen !== 'undefined') ? this.config.mark_seen : true
 
     this.access_token = config.access_token
     this.Server = new Server(config, emitter)

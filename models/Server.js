@@ -2,6 +2,7 @@ const Router = require('koa-router')
 
 const randomize = require('../modules/randomize')
 const Logger = require('../modules/logger')
+const Typer = require('./Typer')
 const Sender = require('./Sender.js')
 const CommentTools = require('./CommentTools.js')
 
@@ -15,14 +16,15 @@ class Server {
     this.verify_token = randomize.string(10)
     this.emitter = emitter
     this.log = new Logger(this.config, 'server', emitter)
+    this.typer = new Typer(config, emitter)
     that = this
   }
 
   init () {
     router.get(this.config.endpoint, (ctx) => {
-      let mode = ctx.query['hub.mode']
-      let token = ctx.query['hub.verify_token']
-      let challenge = ctx.query['hub.challenge']
+      const mode = ctx.query['hub.mode']
+      const token = ctx.query['hub.verify_token']
+      const challenge = ctx.query['hub.challenge']
 
       if (!mode || !token) {
         this.log.warn('Webhook connection request without mode and/or token.')
@@ -38,17 +40,17 @@ class Server {
     })
 
     router.post(this.config.endpoint, (ctx) => {
-      let body = ctx.request.body
+      const body = ctx.request.body
       that.emitter.emit('request_incoming', body, ctx)
       if (body.object === 'page') {
         for (let i = 0; i < body.entry.length; i++) {
-          let entry = body.entry[i]
+          const entry = body.entry[i]
           that.emitter.emit('entry', entry)
           if (entry.messaging) {
             for (let o = 0; o < entry.messaging.length; o++) {
-              let message = entry.messaging[o]
+              const message = entry.messaging[o]
               if (message.message && message.message.is_echo) {
-                let m = {}
+                const m = {}
                 m.text = message.message.text
                 m.app_id = message.message.app_id
                 m.timestamp = message.timestamp
@@ -59,7 +61,7 @@ class Server {
                 return
               }
 
-              let m = {}
+              const m = {}
               m.sender_id = message.sender.id
               m.reply = new Sender(that.config, message.sender.id, that.emitter)
               m.timestamp = message.timestamp
@@ -93,12 +95,13 @@ class Server {
               } else {
                 that.emitter.emit('text', m, message)
               }
+              if (that.config.mark_seen) that.typer.markSeen(m.sender_id)
             }
           } else if (entry.changes) {
             for (let p = 0; p < entry.changes.length; p++) {
-              let change = entry.changes[p]
+              const change = entry.changes[p]
               that.emitter.emit('change', change)
-              let o = {}
+              const o = {}
               o.user = change.value.from
               o.type = change.value.item
               o.created_time = change.value.created_time

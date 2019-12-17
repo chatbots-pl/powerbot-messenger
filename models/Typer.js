@@ -2,11 +2,13 @@ const axios = require('axios')
 
 const createError = require('../modules/create_error')
 const delay = require('../modules/delay')
+const Logger = require('../modules/logger')
 
 class Typer {
-  constructor (options, emitter) {
-    this.api_url = options.api_url || `https://graph.facebook.com/${options.api_version}/me/messages?access_token=${options.access_token}`
+  constructor (config, emitter) {
+    this.api_url = config.api_url || `https://graph.facebook.com/${config.api_version}/me/messages?access_token=${config.access_token}`
     this.emitter = emitter
+    this.log = new Logger(config, 'typer', emitter)
   }
 
   async on (id, time) {
@@ -41,6 +43,23 @@ class Typer {
       return response
     } catch (e) {
       throw createError(e)
+    }
+  }
+
+  async markSeen (id) {
+    try {
+      const body = {
+        recipient: {
+          id: id
+        },
+        sender_action: 'mark_seen'
+      }
+
+      const response = await axios.post(this.api_url, body)
+      this.emitter.emit('request_outgoing', body, response)
+      return response
+    } catch (e) {
+      this.log.error(createError(e))
     }
   }
 }
