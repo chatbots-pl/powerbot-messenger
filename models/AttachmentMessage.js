@@ -12,6 +12,7 @@ class Message {
       type: options.type,
       payload: {}
     }
+    if (options.persona_id) this.persona_id = options.persona_id
     if (isUrl(options.url)) {
       this.message.attachment.payload.is_reusable = options.is_reusable
       this.message.attachment.payload.url = options.url

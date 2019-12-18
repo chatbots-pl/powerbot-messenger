@@ -7,6 +7,7 @@ class MessageFrame {
     if (typeof options === 'object') {
       this.messaging_type = options.messaging_type || 'RESPONSE'
       rField = options.recipient_field || rField
+      if (options.persona_id) this.persona_id = options.persona_id
       if (this.messaging_type === 'MESSAGE_TAG') this.tag = options.tag
     } else if (typeof options === 'string') {
       this.messaging_type = 'MESSAGE_TAG'
