@@ -1,58 +1,66 @@
 # Powerbot Messenger 🤖
 This package is based on code of incredbot library and it's continuation.
 
-- [Powerbot Messenger 🤖](#powerbot-messenger-%f0%9f%a4%96)
-  - [**Broadcast API Note**](#broadcast-api-note)
-  - [Including](#including)
+- [Powerbot Messenger 🤖](#powerbot-messenger---)
+  * [**Broadcast API Note**](#--broadcast-api-note--)
+  * [Including](#including)
       - [Configuration options](#configuration-options)
-  - [Server](#server)
-    - [Starting server](#starting-server)
-    - [Catching events](#catching-events)
-    - [Server events](#server-events)
-    - [Formed Message vs Raw Message](#formed-message-vs-raw-message)
-  - [Sender](#sender)
-    - [Methods](#methods)
-      - [`text(message, options)`](#textmessage-options)
-      - [`quickReplies(message, replies, options)`](#quickrepliesmessage-replies-options)
-      - [`buttons(text, buttons, options)`](#buttonstext-buttons-options)
-      - [`attachment(type, url, options)`](#attachmenttype-url-options)
-      - [`generic(elements, options)`](#genericelements-options)
-  - [Helpers](#helpers)
-    - [Button](#button)
-    - [Generic Message](#generic-message)
-    - [Get Started Button](#get-started-button)
-    - [Greeting](#greeting)
-    - [Quick Reply](#quick-reply)
-  - [User object](#user-object)
-    - [Get user data](#get-user-data)
-    - [Send message](#send-message)
-  - [Static elements](#static-elements)
-    - [`pbm.send.setting(data)`](#pbmsendsettingdata)
+  * [Server](#server)
+    + [Starting server](#starting-server)
+    + [Catching events](#catching-events)
+    + [Server events](#server-events)
+    + [Formed Message vs Raw Message](#formed-message-vs-raw-message)
+  * [Sender](#sender)
+    + [Methods](#methods)
+      - [`text(message, options)`](#-text-message--options--)
+      - [`quickReplies(message, replies, options)`](#-quickreplies-message--replies--options--)
+      - [`buttons(text, buttons, options)`](#-buttons-text--buttons--options--)
+      - [`attachment(type, url, options)`](#-attachment-type--url--options--)
+      - [`generic(elements, options)`](#-generic-elements--options--)
+      - [`media(element, options)`](#-media-element--options--)
+  * [Helpers](#helpers)
+    + [Button](#button)
+    + [Generic Message](#generic-message)
+    + [Media Message](#media-message)
+    + [Get Started Button](#get-started-button)
+    + [Greeting](#greeting)
+    + [Quick Reply](#quick-reply)
+  * [User object](#user-object)
+    + [Get user data](#get-user-data)
+    + [Send message](#send-message)
+  * [Static elements](#static-elements)
+    + [`pbm.send.setting(data)`](#-pbmsendsetting-data--)
       - [Greeting](#greeting-1)
       - [Get Started Button](#get-started-button-1)
       - [Persistent Menu](#persistent-menu)
-  - [Natural typing](#natural-typing)
-  - [Generator Module](#generator-module)
-    - [Supported types](#supported-types)
+  * [Personas](#personas)
+    + [Creating persona](#creating-persona)
+    + [Deleting persona](#deleting-persona)
+    + [Using persona with reply method](#using-persona-with-reply-method)
+    + [Using persona with Frame class](#using-persona-with-frame-class)
+  * [Natural typing](#natural-typing)
+  * [Generator Module](#generator-module)
+    + [Supported types](#supported-types)
       - [Text](#text)
       - [Quick Replies](#quick-replies)
       - [Buttons](#buttons)
       - [Generic](#generic)
-    - [Frame class](#frame-class)
-      - [`options`](#options)
+      - [Media](#media)
+    + [Frame class](#frame-class)
+      - [`options`](#-options-)
       - [Normal response](#normal-response)
       - [Message tag](#message-tag)
       - [Message tag shorthand](#message-tag-shorthand)
-  - [Comments interaction](#comments-interaction)
-    - [Private Reply](#private-reply)
-  - [Uploader module](#uploader-module)
-    - [Upload from URL](#upload-from-url)
-  - [Examples](#examples)
-    - [Echo bot full example](#echo-bot-full-example)
-  - [License](#license)
+  * [Comments & Posts reactions](#comments---posts-reactions)
+    + [Reply to comment](#reply-to-comment)
+    + [Reply to post](#reply-to-post)
+  * [Uploader module](#uploader-module)
+    + [Upload from URL](#upload-from-url)
+  * [Examples](#examples)
+    + [Echo bot full example](#echo-bot-full-example)
+  * [License](#license)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
-
 
 ## **Broadcast API Note**
 As Broadcast API is not a part of Messenger Platform API v4.0, module providing support for this API was completly removed from package.
@@ -392,6 +400,35 @@ let menu = {
 
 await pbm.send.setting(menu)
 ```
+
+## Personas
+
+Powerbot supports Personas API since version v1.1.0. Library can create and delete personas and utilize them with sender module.
+
+### Creating persona
+```javascript
+  const personaId = await pbm.personas.create('Persona name', '<IMAGE_URL>')
+```
+
+### Deleting persona
+```javascript
+  await pbm.personas.delete('<IMAGE_URL>')
+```
+
+### Using persona with reply method
+```javascript
+    await message.reply.attachment('image', '<ATTACHMENT_URL|ATTACHMENT_ID>', { persona_id: '<PERSONA_ID>' })
+```
+
+### Using persona with Frame class
+```javascript
+    const message = new pbm.Message.Text('Text message created with Generator class')
+    const framedMessage = new pbm.Frame(message, '1489852771114961', {
+      persona_id: '<PERSONA_ID>'
+    })
+    await pbm.send.raw(framedMessage)
+```
+
 
 ## Natural typing
 
