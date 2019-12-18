@@ -226,6 +226,20 @@ let cards = [
 await message.reply.generic(cards)
 ```
 
+#### `media(element, options)`
+
+Sends media element to user
+
+```javascript
+  const o = {
+    buttons: [new pbm.Helpers.Button('web_url', 'URL', '<URL_ADDRESS>'), new pbm.Helpers.Button('postback', 'PAYLOAD', '<DEV_PAYLOAD>')],
+    url: '<URL_TO_MEDIA>',
+    media_type: 'image'
+  }
+    
+  const m = new pbm.Helpers.Media(o) // Single media element, this is automatically wrapped in normal usage
+```
+
 ## Helpers
 
 Using helpers is the easiest way to send desired message to facebook. Helpers are returning object for
@@ -266,6 +280,21 @@ let cards = [
   new pbm.Helpers.Generic(card1),
   new pbm.Helpers.Generic('Card Two', 'Subtitle no.2', 'image_url', buttons)
 ]
+```
+
+### Media Message
+As first argument of media message helper you can pass object or string.
+
+`new pbm.Helpers.Media(type, url|attachemnt_id, buttons)`
+
+```javascript
+  const o = {
+    buttons: [new pbm.Helpers.Button('web_url', 'URL', '<URL_ADDRESS>'), new pbm.Helpers.Button('postback', 'PAYLOAD', '<DEV_PAYLOAD>')],
+    url: '<URL_TO_MEDIA>',
+    media_type: 'image'
+  }
+    
+  const m = new pbm.Helpers.Media(o) // Single media element, this is automatically wrapped in normal usage
 ```
 
 ### Get Started Button
@@ -426,6 +455,21 @@ const cards = [card, card, card]
 const message = new pbm.Message.Generic(cards)
 ```
 
+#### Media
+
+`pbm.Message.Media(element, options)`
+
+```javascript
+  const o = {
+    buttons: [new pbm.Helpers.Button('web_url', 'URL', '<URL_ADDRESS>'), new pbm.Helpers.Button('postback', 'PAYLOAD', '<DEV_PAYLOAD>')],
+    url: '<URL_TO_MEDIA>',
+    media_type: 'image'
+  }
+    
+  const m = new pbm.Helpers.Media(o) // Single media element, this is automatically wrapped in normal usage
+  const message = new pbm.Message.Media(m) // Wrapped here
+```
+
 ### Frame class
 
 `pbm.Frame(message, recipient_id, options)`
@@ -506,11 +550,11 @@ const Koa = require('koa')
 const bodyParser = require('koa-bodyparser')
 const PowerbotMessenger = require('@chatbots-pl/powerbot-messenger')
 
-const pbMessenger = new PowerbotMessenger({
+const pbm = new PowerbotMessenger({
   access_token: '<ACCESS_TOKEN>'
 })
 const app = new Koa()
-const messengerWebhook = pbMessenger.Server.init()
+const messengerWebhook = pbm.Server.init()
 
 const bot = messengerWebhook.bot
 

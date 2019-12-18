@@ -9,7 +9,7 @@ class Message {
     }
 
     if (options.buttons) {
-      let p = this.attachment.payload
+      const p = this.attachment.payload
       p.template_type = 'button'
       p.text = options.text
       p.buttons = options.buttons
@@ -17,9 +17,15 @@ class Message {
     }
 
     if (options.generics) {
-      let p = this.attachment.payload
+      const p = this.attachment.payload
       p.template_type = 'generic'
       p.elements = options.generics
+    }
+
+    if (options.medias) {
+      const p = this.attachment.payload
+      p.template_type = 'media'
+      p.elements = options.medias
     }
   }
 }

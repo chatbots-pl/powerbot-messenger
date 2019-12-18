@@ -3,6 +3,7 @@ const Button = require('./helpers/Button.js')
 const GetStartedButton = require('./helpers/GetStartedButton.js')
 const Greeting = require('./helpers/Greeting.js')
 const Generic = require('./helpers/Generic.js')
+const Media = require('./helpers/Media.js')
 
 class Helpers {
   constructor (sender) {
@@ -11,6 +12,7 @@ class Helpers {
     this.GetStartedButton = GetStartedButton
     this.Greeting = Greeting
     this.Generic = Generic
+    this.Media = Media
   }
 }
 

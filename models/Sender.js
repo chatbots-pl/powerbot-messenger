@@ -112,6 +112,17 @@ class Sender {
     return this.raw(message)
   }
 
+  media (element, options) {
+    let optionsCopy = {}
+    if (options) Object.assign(optionsCopy, options)
+    else optionsCopy = {}
+    optionsCopy.recipient_id = this.recipient_id || options.recipient_id
+    optionsCopy.medias = [element]
+
+    const message = new MessageFrame(new TemplateBase(optionsCopy), optionsCopy)
+    return this.raw(message)
+  }
+
   attachment (type, url, options) {
     options = options || {}
     options.recipient_id = this.recipient_id || options.recipient_id

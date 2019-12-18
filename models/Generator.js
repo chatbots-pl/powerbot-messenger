@@ -37,12 +37,21 @@ class Generic extends TemplateBase {
   }
 }
 
+class Media extends TemplateBase {
+  constructor (element, options) {
+    options = options || {}
+    options.medias = [element]
+    super(options)
+  }
+}
+
 class Generator {
   constructor (options) {
     this.Text = Text
     this.QuickReplies = QuickReplies
     this.Buttons = Buttons
     this.Generic = Generic
+    this.Media = Media
   }
 }
 

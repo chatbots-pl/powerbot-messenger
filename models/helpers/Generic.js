@@ -1,7 +1,7 @@
 class Generic {
   constructor (title, subtitle, imageUrl, buttons, defaultAction) {
     if (typeof (title) === 'object') {
-      let o = title
+      const o = title
       this.title = o.title
       if (o.subtitle) this.subtitle = o.subtitle
       if (o.image_url) this.image_url = o.image_url
