@@ -106,12 +106,13 @@ class Server {
               o.type = change.value.item
               o.created_time = change.value.created_time
 
-              if (o.type === 'comment') {
+              if (o.type === 'comment' && change.value.verb === 'add') {
                 o.comment = {
                   text: change.value.message,
                   id: change.value.comment_id
                 }
-                o.tools = new CommentTools(that.config, o.comment, o.user, that.emitter)
+                o.tools = new CommentTools(that.config, o.comment, o.user, that.emitter) // DEPRACATED
+                o.reply = new Sender(that.config, o.comment.id, that.emitter, 'comment_id')
                 that.emitter.emit('comment', o, change)
               }
             }

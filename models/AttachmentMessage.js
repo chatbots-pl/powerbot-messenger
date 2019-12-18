@@ -3,9 +3,10 @@ const isUrl = require('../modules/is_url')
 class Message {
   constructor (options) {
     options = options || {}
+    const rField = options.recipient_field || 'id'
     this.messaging_type = options.messaging_type || 'RESPONSE'
     this.recipient = {}
-    this.recipient.id = options.recipient_id
+    this.recipient[rField] = options.recipient_id
     this.message = {}
     this.message.attachment = {
       type: options.type,

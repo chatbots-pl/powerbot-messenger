@@ -2,7 +2,7 @@ const createError = require('../../modules/create_error')
 
 class Button {
   constructor (type, title, payload) {
-    const supported = ['web_url', 'postback', 'phone_number', 'element_share', 'account_link', 'account_unlink']
+    const supported = ['web_url', 'postback', 'phone_number', 'element_share', 'account_link', 'account_unlink'] // DEPRACATED (element_share)
     const nonTitled = ['element_share', 'account_link', 'account_unlink']
     if (supported.indexOf(type) === -1) throw createError('This type of button is not currently supported by Powerbot Messenger. Please use raw send option instead.')
     if (nonTitled.indexOf(type) === -1) this.title = title
