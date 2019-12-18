@@ -139,7 +139,8 @@ bot.on('text', async (message, raw) => {
 | postback         | Payload from button reveived                                 | `formedMessage`, `rawMessage` |
 | quick_reply      | Payload from quick reply received                            | `formedMessage`, `rawMessage` |
 | change           | Each change in received object (ex. new comment on page)     | `rawChange`                   |
-| comment          | Each comment action on page                                  | `formedChange`, `rawChange`   |
+| comment          | New comment created on page                                  | `formedChange`, `rawChange`   |
+| post             | New user post created on page                                | `formedChange`, `rawChange`   |
 
 ### Formed Message vs Raw Message
 
@@ -513,23 +514,23 @@ await pbm.send.raw(framedMessage)
 ```
 
 
-## Comments interaction
+## Comments & Posts reactions
 
-For now, the only interaction with comment which is supported by Powerbot Messenger is private replying.
+You can receive and reply to comments and posts created on your fanpage. Of corse you will need `manage_pages` permission and `feed` activated for your webhook.
 
-### Private Reply
+Powerbot has 2 events to perform that actions - `comment` and `post`. Reply method of both supports all messages types available in `Sender` class.
 
-`comment.tools.replyPrivately(text)`
-
-Object tools, which contains replyPrivately method is only inside comment object. To send privte reply to comment you need to catch it's event first.
-
+### Reply to comment
 ```javascript
-bot.on('comment', async (comment, raw) => {
-  try {
-    await comment.tools.replyPrivately('Hi! This is private reply!')
-  } catch (e) {
-    console.error(e)
-  }
+bot.on('comment', async comment => {
+  await comment.reply.buttons('Comment message with buttons', [new pbMessenger.Helpers.Button('postback', 'Button title', '<PAYLOAD>')])
+})
+```
+
+### Reply to post
+```javascript
+bot.on('post', async post => {
+  await post.reply.buttons('post message with buttons', [new pbMessenger.Helpers.Button('postback', 'Button title', '<PAYLOAD>')])
 })
 ```
 
