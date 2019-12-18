@@ -260,6 +260,8 @@ Actually, this helper supports following types of buttons:
   let web_url = new pbm.Helpers.Button('web_url', 'Go', 'https://example.com/')
   let phone_number = new pbm.Helpers.Button('phone_number', 'Call Us', '+15105559999')
   let share = new pbm.Helpers.Button('element_share')
+  let login = new pbm.Helpers.Button('account_link', 'https://example.com/auth')
+  let logout = new pbm.Helpers.Button('account_unlink')
 ```
 
 ### Generic Message
