@@ -115,6 +115,15 @@ class Server {
                 o.reply = new Sender(that.config, o.comment.id, that.emitter, 'comment_id')
                 that.emitter.emit('comment', o, change)
               }
+
+              if (o.type === 'post' && change.value.verb === 'add') {
+                o.post = {
+                  text: change.value.message,
+                  id: change.value.post_id
+                }
+                o.reply = new Sender(that.config, o.post.id, that.emitter, 'post_id')
+                that.emitter.emit('post', o, change)
+              }
             }
           }
         }
