@@ -11,7 +11,7 @@ const router = new Router()
 let that = null
 
 class Server {
-  constructor (config, emitter) {
+  constructor(config, emitter) {
     this.config = config
     this.verify_token = randomize.string(10)
     this.emitter = emitter
@@ -20,7 +20,7 @@ class Server {
     that = this
   }
 
-  init () {
+  init() {
     router.get(this.config.endpoint, (ctx) => {
       const mode = ctx.query['hub.mode']
       const token = ctx.query['hub.verify_token']
@@ -92,8 +92,11 @@ class Server {
                 m.payload = message.message.quick_reply.payload
                 that.emitter.emit('quick_reply', m, message)
                 that.emitter.emit('payload', m, message)
-              } else {
+              } else if (m.text) {
                 that.emitter.emit('text', m, message)
+              } else if (message.referral) {
+                m.referral = message.referral
+                that.emitter.emit('referral', m, message)
               }
               if (that.config.mark_seen) that.typer.markSeen(m.sender_id)
             }

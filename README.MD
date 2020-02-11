@@ -146,6 +146,7 @@ bot.on('text', async (message, raw) => {
 | payload          | Any payload received (button or quick reply)                 | `formedMessage`, `rawMessage` |
 | postback         | Payload from button reveived                                 | `formedMessage`, `rawMessage` |
 | quick_reply      | Payload from quick reply received                            | `formedMessage`, `rawMessage` |
+| referral         | Referral received from m.me link                             | `formedMessage`, `rawMessage` |
 | change           | Each change in received object (ex. new comment on page)     | `rawChange`                   |
 | comment          | New comment created on page                                  | `formedChange`, `rawChange`   |
 | post             | New user post created on page                                | `formedChange`, `rawChange`   |
