@@ -1,5 +1,6 @@
 const MessageBase = require('./MessageBase.js')
 const TemplateBase = require('./TemplateBase.js')
+const isUrl = require('../modules/is_url')
 
 class Text extends MessageBase {
   constructor (text, options) {
@@ -45,6 +46,20 @@ class Media extends TemplateBase {
   }
 }
 
+class Attachment{
+  constructor(type, urlOrId, reusable = true){
+    this.attachment = {}
+    this.attachment.type = type
+    this.attachment.payload = {}
+    if(isUrl(urlOrId)){
+      this.attachment.payload.url = urlOrId
+      this.attachment.payload.is_reusable = reusable
+    } else {
+      this.attachment.payload.attachment_id = urlOrId
+    }
+  }
+}
+
 class Generator {
   constructor (options) {
     this.Text = Text
@@ -52,6 +67,7 @@ class Generator {
     this.Buttons = Buttons
     this.Generic = Generic
     this.Media = Media
+    this.Attachment = Attachment
   }
 }
 
