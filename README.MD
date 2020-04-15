@@ -246,8 +246,16 @@ Sends media element to user
     url: '<URL_TO_MEDIA>',
     media_type: 'image'
   }
-    
-  const m = new pbm.Helpers.Media(o) // Single media element, this is automatically wrapped in normal usage
+
+  await message.reply.media(o)
+```
+
+#### `oneTimeNotificationRequest (title, payload, options)`
+
+Sends One Time Notification request to user
+
+```javascript
+  await message.reply.oneTimeNotificationRequest('Get notified when something happened...', 'MY_PAYLOAD')
 ```
 
 ## Helpers
@@ -509,6 +517,14 @@ const message = new pbm.Message.Generic(cards)
     
   const m = new pbm.Helpers.Media(o) // Single media element, this is automatically wrapped in normal usage
   const message = new pbm.Message.Media(m) // Wrapped here
+```
+
+#### One Time Notification Request
+
+`pbm.Message.oneTimeNotificationRequest (title, payload, options)`
+
+```javascript
+  const message = new pbm.Message.oneTimeNotificationRequest('Get notified when something happened...', 'MY_PAYLOAD')
 ```
 
 ### Frame class
