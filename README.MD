@@ -130,26 +130,29 @@ bot.on('text', async (message, raw) => {
 
 ### Server events
 
-| Event            | Description                                                  | Passed parameters             |
-|------------------|--------------------------------------------------------------|-------------------------------|
-| request_incoming | Every request to your webhook                                | `body`, `ctx`                 |
-| request_outgoing | Every request sent from bot via Powerbot Messenger library   | `body`, `ctx`                 |
-| log              | Any log from Powerbot Messenger (except throwed errors)      | `logObject`                   |
-| message_sent     | Every message sent from bot via Powerbot Messenger library   | `body`, `ctx`                 |
-| entry            | Each entry in received object                                | `entry`                       |
-| echo             | Any message sent by bot (every message with `is_echo: true`) | `formedMessage`, `rawMessage` |
-| message          | Any message received (each object of `entry.messaging`)      | `formedMessage`, `rawMessage` |
-| text             | Text message received                                        | `formedMessage`, `rawMessage` |
-| location         | Each message attachment with `type: 'location'`              | `formedMessage`, `rawMessage` |
-| image            | Each message attachment with `type: 'image'`                 | `formedMessage`, `rawMessage` |
-| fallback         | Each message attachment not recognized by messenger platform | `formedMessage`, `rawMessage` |
-| payload          | Any payload received (button or quick reply)                 | `formedMessage`, `rawMessage` |
-| postback         | Payload from button reveived                                 | `formedMessage`, `rawMessage` |
-| quick_reply      | Payload from quick reply received                            | `formedMessage`, `rawMessage` |
-| referral         | Referral received from m.me link                             | `formedMessage`, `rawMessage` |
-| change           | Each change in received object (ex. new comment on page)     | `rawChange`                   |
-| comment          | New comment created on page                                  | `formedChange`, `rawChange`   |
-| post             | New user post created on page                                | `formedChange`, `rawChange`   |
+| Event              | Description                                                  | Passed parameters             |
+|--------------------|--------------------------------------------------------------|-------------------------------|
+| request_incoming   | Every request to your webhook                                | `body`, `ctx`                 |
+| request_outgoing   | Every request sent from bot via Powerbot Messenger library   | `body`, `ctx`                 |
+| log                | Any log from Powerbot Messenger (except throwed errors)      | `logObject`                   |
+| message_sent       | Every message sent from bot via Powerbot Messenger library   | `body`, `ctx`                 |
+| entry              | Each entry in received object                                | `entry`                       |
+| echo               | Any message sent by bot (every message with `is_echo: true`) | `formedMessage`, `rawMessage` |
+| message            | Any message received (each object of `entry.messaging`)      | `formedMessage`, `rawMessage` |
+| text               | Text message received                                        | `formedMessage`, `rawMessage` |
+| location           | Each message attachment with `type: 'location'`              | `formedMessage`, `rawMessage` |
+| image              | Each message attachment with `type: 'image'`                 | `formedMessage`, `rawMessage` |
+| fallback           | Each message attachment not recognized by messenger platform | `formedMessage`, `rawMessage` |
+| payload            | Any payload received (button or quick reply)                 | `formedMessage`, `rawMessage` |
+| postback           | Payload from button reveived                                 | `formedMessage`, `rawMessage` |
+| quick_reply        | Payload from quick reply received                            | `formedMessage`, `rawMessage` |
+| referral           | Referral received from m.me link                             | `formedMessage`, `rawMessage` |
+| change             | Each change in received object (ex. new comment on page)     | `rawChange`                   |
+| comment            | New comment created on page                                  | `formedChange`, `rawChange`   |
+| post               | New user post created on page                                | `formedChange`, `rawChange`   |
+| optin              | Each message containing optin property                       | `formedMessage`, `rawMessage` |
+| one_time_notif_req | Each message containing token for One Time Notification      | `formedMessage`, `rawMessage` |
+
 
 ### Formed Message vs Raw Message
 

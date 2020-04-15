@@ -11,7 +11,7 @@ const router = new Router()
 let that = null
 
 class Server {
-  constructor(config, emitter) {
+  constructor (config, emitter) {
     this.config = config
     this.verify_token = randomize.string(10)
     this.emitter = emitter
@@ -20,7 +20,7 @@ class Server {
     that = this
   }
 
-  init() {
+  init () {
     router.get(this.config.endpoint, (ctx) => {
       const mode = ctx.query['hub.mode']
       const token = ctx.query['hub.verify_token']
@@ -97,6 +97,13 @@ class Server {
               } else if (message.referral) {
                 m.referral = message.referral
                 that.emitter.emit('referral', m, message)
+              } else if (message.optin) {
+                that.emitter.emit('optin', m, message)
+                if (message.optin.type === 'one_time_notif_req') {
+                  m.token = message.optin.one_time_notif_token
+                  m.payload = message.optin.payload
+                  that.emitter.emit('one_time_notif_req', m, message)
+                }
               }
               if (that.config.mark_seen) that.typer.markSeen(m.sender_id)
             }
