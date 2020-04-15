@@ -46,17 +46,28 @@ class Media extends TemplateBase {
   }
 }
 
-class Attachment{
-  constructor(type, urlOrId, reusable = true){
+class Attachment {
+  constructor (type, urlOrId, reusable = true) {
     this.attachment = {}
     this.attachment.type = type
     this.attachment.payload = {}
-    if(isUrl(urlOrId)){
+    if (isUrl(urlOrId)) {
       this.attachment.payload.url = urlOrId
       this.attachment.payload.is_reusable = reusable
     } else {
       this.attachment.payload.attachment_id = urlOrId
     }
+  }
+}
+
+class OneTimeNotificationRequest extends TemplateBase {
+  constructor (title, payload, options) {
+    options = options || {}
+    options.otn_request = {
+      title,
+      payload
+    }
+    super(options)
   }
 }
 
@@ -68,6 +79,7 @@ class Generator {
     this.Generic = Generic
     this.Media = Media
     this.Attachment = Attachment
+    this.OneTimeNotificationRequest = OneTimeNotificationRequest
   }
 }
 

@@ -27,6 +27,13 @@ class Message {
       p.template_type = 'media'
       p.elements = options.medias
     }
+
+    if (options.otn_request) {
+      const p = this.attachment.payload
+      p.template_type = 'one_time_notif_req'
+      p.title = options.otn_request.title
+      p.payload = options.otn_request.payload
+    }
   }
 }
 

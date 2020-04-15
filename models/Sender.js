@@ -135,6 +135,22 @@ class Sender {
     const message = new Attachment(options)
     return this.raw(message)
   }
+
+  oneTimeNotificationRequest (title, payload, options) {
+    let optionsCopy = {}
+    if (options) Object.assign(optionsCopy, options)
+    else optionsCopy = {}
+
+    optionsCopy.recipient_id = this.recipient_id || options.recipient_id
+    optionsCopy.recipient_field = this.recipient_field
+    optionsCopy.otn_request = {
+      title,
+      payload
+    }
+
+    const message = new MessageFrame(new TemplateBase(optionsCopy), optionsCopy)
+    return this.raw(message)
+  }
 }
 
 module.exports = Sender
