@@ -152,6 +152,7 @@ bot.on('text', async (message, raw) => {
 | post               | New user post created on page                                | `formedChange`, `rawChange`   |
 | optin              | Each message containing optin property                       | `formedMessage`, `rawMessage` |
 | one_time_notif_req | Each message containing token for One Time Notification      | `formedMessage`, `rawMessage` |
+| message_read       | Each request with information about message read             | `formedMessage`, `rawMessage` |
 
 
 ### Formed Message vs Raw Message

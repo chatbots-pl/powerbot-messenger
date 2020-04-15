@@ -69,7 +69,10 @@ class Server {
 
               that.emitter.emit('message', m, message)
 
-              if (message.message && message.message.attachments) {
+              if (message.read) {
+                m.watermark = message.read.watermark
+                that.emitter.emit('message_read', m, message)
+              } else if (message.message && message.message.attachments) {
                 message.message.attachments.map(attachment => {
                   if (attachment.type === 'location') {
                     m.location = attachment.payload.coordinates
