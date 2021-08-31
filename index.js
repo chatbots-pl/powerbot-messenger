@@ -7,6 +7,7 @@ const Uploader = require('./models/Uploader.js')
 const MessageGenerator = require('./models/Generator.js')
 const MessageFrame = require('./models/MessageFrame.js')
 const Personas = require('./models/Personas.js')
+const HandoverProtocol = require('./models/HandoverProtocol.js')
 const emitter = require('./modules/emitter')
 
 class PowerbotMessenger {
@@ -26,6 +27,7 @@ class PowerbotMessenger {
     this.Message = new MessageGenerator(config)
     this.Frame = MessageFrame
     this.personas = new Personas(config)
+    this.handover = new HandoverProtocol(config, emitter)
   }
 
   User (messengerId) {
