@@ -7,6 +7,7 @@ const Typer = require('./Typer.js')
 const Logger = require('../modules/logger')
 
 const createError = require('../modules/create_error')
+const HandoverProtocol = require('./HandoverProtocol.js')
 
 class Sender {
   constructor (config, recipientId, emitter, recipientField = 'id') {
@@ -17,12 +18,13 @@ class Sender {
     this.api_version = config.api_version
     this.api_url = this.config.api_url || `https://graph.facebook.com/${this.api_version}/me/messages?access_token=${this.access_token}`
     this.setting_url = this.config.setting_url || `https://graph.facebook.com/${this.api_version}/me/messenger_profile?access_token=${this.access_token}`
-    this.natural_typing = config.natural_typing != false ? true : false
+    this.natural_typing = config.natural_typing !== false
     this.natural_typing_speed = config.natural_typing_speed || 50
     this.typing = new Typer(config, emitter)
     this.log = new Logger(this.config, 'sender', emitter)
     this.emitter = emitter
     this.recipient_field = recipientField
+    this.handover = new HandoverProtocol(config, emitter)
   }
 
   async raw (message) {
@@ -150,6 +152,18 @@ class Sender {
 
     const message = new MessageFrame(new TemplateBase(optionsCopy), optionsCopy)
     return this.raw(message)
+  }
+
+  passThreadControl (appId, metadata) {
+    return this.handover.passControl(appId, this.recipient_id, metadata)
+  }
+
+  requestThreadControl (metadata) {
+    return this.handover.requestControl(this.recipient_id, metadata)
+  }
+
+  takeThreadControl (metadata) {
+    return this.handover.takeControl(this.recipient_id, metadata)
   }
 }
 
