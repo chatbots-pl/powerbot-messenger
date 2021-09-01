@@ -2,7 +2,6 @@
 This package is based on code of incredbot library and it's continuation.
 
 - [Powerbot Messenger 🤖](#powerbot-messenger---)
-  * [**Broadcast API Note**](#--broadcast-api-note--)
   * [Including](#including)
       - [Configuration options](#configuration-options)
   * [Server](#server)
@@ -53,6 +52,14 @@ This package is based on code of incredbot library and it's continuation.
       - [Normal response](#normal-response)
       - [Message tag](#message-tag)
       - [Message tag shorthand](#message-tag-shorthand)
+  * [Handover Protocol](#handover-protocol)
+    + [Pass Thread Control](#pass-thread-control)
+    + [Take Thread Control](#take-thread-control)
+    + [Request Thread Control](#request-thread-control)
+    + [Secondary Receivers List](#secondary-receivers-list)
+    + [Thread Owner](#thread-owner)
+    + [Handover methods as reply](#handover-methods-as-reply)
+      - [**Important notice**](#--important-notice--)
   * [Comments & Posts reactions](#comments---posts-reactions)
     + [Reply to comment](#reply-to-comment)
     + [Reply to post](#reply-to-post)
@@ -63,9 +70,6 @@ This package is based on code of incredbot library and it's continuation.
   * [License](#license)
 
 <small><i><a href='http://ecotrust-canada.github.io/markdown-toc/'>Table of contents generated with markdown-toc</a></i></small>
-
-## **Broadcast API Note**
-As Broadcast API is not a part of Messenger Platform API v4.0, module providing support for this API was completly removed from package.
 
 ## Including
 
@@ -573,6 +577,66 @@ const framedMessage = new pbm.Frame(message, '1489852771114961', 'NON_PROMOTIONA
 await pbm.send.raw(framedMessage)
 ```
 
+## Handover Protocol
+Powerbot handles requests to handover protocol API. Assume that `message` in all of the following examples is `message` object received in `.on('text')`
+
+### Pass Thread Control
+`pbm.handover.passControl(appId, userId, metadata)`
+```javascript
+await pbm.handover.passControl(123456789, message.sender_id)
+// Or with metadata:
+await pbm.handover.passControl(123456789, message.sender_id, 'some data here')
+```
+
+### Take Thread Control
+`pbm.handover.takeControl(userId, metadata)`
+```javascript
+await pbm.handover.takeControl(message.sender_id)
+// Or with metadata:
+await pbm.handover.takeControl(message.sender_id, 'some data here')
+```
+
+### Request Thread Control
+`pbm.handover.requestControl(userId, metadata)`
+```javascript
+await pbm.handover.requestControl(message.sender_id)
+// Or with metadata:
+await pbm.handover.requestControl(message.sender_id, 'some data here')
+```
+
+### Secondary Receivers List
+`pbm.handover.getSecondaryReceivers(...fields)`
+```javascript
+const data = await pbm.handover.getSecondaryReceivers()
+console.log(data)
+// Or with fileds:
+const another = await pbm.handover.getSecondaryReceivers('id', 'name')
+console.log(another)
+```
+
+### Thread Owner
+`pbm.handover.getOwner(userId)`
+```javascript
+const data = await pbm.handover.getOwner(message.sender_id)
+console.log(data)
+```
+
+### Handover methods as reply
+3 handover methods are available in reply object. Those variants doesn't take `userId` argument. Also names are slightly changed:
+
+```javascript
+// Pass sender's thread control to another app:
+await message.reply.passThreadControl(123456789, 'optional metadata')
+
+// Request sender's thread control:
+await message.reply.requestThreadControl('optional metadata')
+
+// Take control over sender's thread:
+await message.reply.takeThreadControl('optional metadata')
+```
+
+#### **Important notice**
+In some cases reply object can be supplied without recipient_id. In such case above functions will throw Graph API Error.
 
 ## Comments & Posts reactions
 
