@@ -25,7 +25,9 @@ class Server {
     return {
       user_id: message.sender.id,
       timestamp: message.timestamp,
-      handover: {
+      reply: new Sender(this.config, message.sender.id, this.emitter),
+      handover: new HandoverReply(this.config, this.emitter, message.sender.id),
+      data: {
         app_id: message[handoverDataFieldName][appIdFieldName],
         metadata: message[handoverDataFieldName].metadata
       }

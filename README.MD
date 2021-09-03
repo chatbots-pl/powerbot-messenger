@@ -135,34 +135,56 @@ bot.on('text', async (message, raw) => {
 
 ### Server events
 
-| Event              | Description                                                  | Passed parameters             |
-|--------------------|--------------------------------------------------------------|-------------------------------|
-| request_incoming   | Every request to your webhook                                | `body`, `ctx`                 |
-| request_outgoing   | Every request sent from bot via Powerbot Messenger library   | `body`, `ctx`                 |
-| log                | Any log from Powerbot Messenger (except throwed errors)      | `logObject`                   |
-| message_sent       | Every message sent from bot via Powerbot Messenger library   | `body`, `ctx`                 |
-| entry              | Each entry in received object                                | `entry`                       |
-| echo               | Any message sent by bot (every message with `is_echo: true`) | `formedMessage`, `rawMessage` |
-| message            | Any message received (each object of `entry.messaging`)      | `formedMessage`, `rawMessage` |
-| text               | Text message received                                        | `formedMessage`, `rawMessage` |
-| location           | Each message attachment with `type: 'location'`              | `formedMessage`, `rawMessage` |
-| image              | Each message attachment with `type: 'image'`                 | `formedMessage`, `rawMessage` |
-| fallback           | Each message attachment not recognized by messenger platform | `formedMessage`, `rawMessage` |
-| payload            | Any payload received (button or quick reply)                 | `formedMessage`, `rawMessage` |
-| postback           | Payload from button reveived                                 | `formedMessage`, `rawMessage` |
-| quick_reply        | Payload from quick reply received                            | `formedMessage`, `rawMessage` |
-| referral           | Referral received from m.me link                             | `formedMessage`, `rawMessage` |
-| change             | Each change in received object (ex. new comment on page)     | `rawChange`                   |
-| comment            | New comment created on page                                  | `formedChange`, `rawChange`   |
-| post               | New user post created on page                                | `formedChange`, `rawChange`   |
-| optin              | Each message containing optin property                       | `formedMessage`, `rawMessage` |
-| one_time_notif_req | Each message containing token for One Time Notification      | `formedMessage`, `rawMessage` |
-| message_read       | Each request with information about message read             | `formedMessage`, `rawMessage` |
+| Event                     | Description                                                                | Passed parameters             |
+|---------------------------|----------------------------------------------------------------------------|-------------------------------|
+| request_incoming          | Every request to your webhook                                              | `body`, `ctx`                 |
+| request_outgoing          | Every request sent from bot via Powerbot Messenger library                 | `body`, `ctx`                 |
+| log                       | Any log from Powerbot Messenger (except throwed errors)                    | `logObject`                   |
+| message_sent              | Every message sent from bot via Powerbot Messenger library                 | `body`, `ctx`                 |
+| entry                     | Each entry in received object                                              | `entry`                       |
+| echo                      | Any message sent by bot (every message with `is_echo: true`)               | `formedMessage`, `rawMessage` |
+| message                   | Any message received (each object of `entry.messaging`)                    | `formedMessage`, `rawMessage` |
+| text                      | Text message received                                                      | `formedMessage`, `rawMessage` |
+| location                  | Each message attachment with `type: 'location'`                            | `formedMessage`, `rawMessage` |
+| image                     | Each message attachment with `type: 'image'`                               | `formedMessage`, `rawMessage` |
+| fallback                  | Each message attachment not recognized by messenger platform               | `formedMessage`, `rawMessage` |
+| payload                   | Any payload received (button or quick reply)                               | `formedMessage`, `rawMessage` |
+| postback                  | Payload from button reveived                                               | `formedMessage`, `rawMessage` |
+| quick_reply               | Payload from quick reply received                                          | `formedMessage`, `rawMessage` |
+| referral                  | Referral received from m.me link                                           | `formedMessage`, `rawMessage` |
+| change                    | Each change in received object (ex. new comment on page)                   | `rawChange`                   |
+| comment                   | New comment created on page                                                | `formedChange`, `rawChange`   |
+| post                      | New user post created on page                                              | `formedChange`, `rawChange`   |
+| optin                     | Each message containing optin property                                     | `formedMessage`, `rawMessage` |
+| one_time_notif_req        | Each message containing token for One Time Notification                    | `formedMessage`, `rawMessage` |
+| message_read              | Each request with information about message read                           | `formedMessage`, `rawMessage` |
+| handover_thread_received  | Chatbot received thread ownership for a user                               | `formedMessage`, `rawMessage` |
+| handover_thread_taken     | Thread ownership for a user has been taken away by another application     | `formedMessage`, `rawMessage` |
+| handover_thread_requested | Some app asks to take thread ownership for a user.                         | `formedMessage`, `rawMessage` |
+| handover_roles_changed    | Administrator of connected page changed Handover Protocol role of chatbot. | `formedMessage`, `rawMessage` |
+
 
 
 ### Formed Message vs Raw Message
 
-As you probably noticed in table above,a lot of events have passed data named `formedMessage` and `rawMessage`. First object is object created by Powerbot Messenger library containing most useful informations like sender, type or content. It also contains `reply` object which allows you to reply to the message sender without passing recipient id. Second object is unmodified object received from Messenger Platform.
+As you probably noticed in table above,a lot of events have passed data named `formedMessage` and `rawMessage`. First object is object created by Powerbot Messenger library containing most useful informations like sender, type or content. It also contains `reply` (and `handover`, check [Handover methods as reply](#handover-methods-as-reply) for more information) object which allows you to reply to the message sender without passing recipient id. Second object is unmodified object received from Messenger Platform.
+
+### Replying to handover events
+
+Handover events that with associated user id (`handover_thread_*`) are treated like messaging events. This means, that first parameter of event callback has `reply` and `handover` fields.
+
+#### Usage example
+For example, some app wants to take thread control to talk with user. You want to inform user about this and then pass thread control to this app:
+```javascript
+bot.on('handover_thread_requested', async (ev, raw) => {
+  try {
+    await ev.reply.text('Some app wants to talk to you, passing thread control...')
+    await ev.handover.passThreadControl('263902037430900')
+  } catch(e) {
+    console.error(e)
+  }
+})
+```
 
 ## Sender
 
@@ -623,17 +645,14 @@ await pbm.handover.requestControl(message.sender_id, 'some data here')
 `pbm.handover.getSecondaryReceivers(...fields)`
 ```javascript
 const data = await pbm.handover.getSecondaryReceivers()
-console.log(data)
 // Or with fileds:
 const another = await pbm.handover.getSecondaryReceivers('id', 'name')
-console.log(another)
 ```
 
 ### Thread Owner
 `pbm.handover.getOwner(userId)`
 ```javascript
 const data = await pbm.handover.getOwner(message.sender_id)
-console.log(data)
 ```
 
 ### Handover methods as reply
