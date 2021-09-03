@@ -20,6 +20,17 @@ class Server {
     that = this
   }
 
+  _formHandoverData(message, handoverDataFieldName, appIdFieldName) {
+    return {
+      user_id: message.sender.id,
+      timestamp: message.timestamp,
+      handover: {
+        app_id: message[handoverDataFieldName][appIdFieldName],
+        metadata: message[handoverDataFieldName].metadata
+      }
+    }
+  }
+
   init () {
     router.get(this.config.endpoint, (ctx) => {
       const mode = ctx.query['hub.mode']
@@ -57,6 +68,37 @@ class Server {
                 m.recipient_id = message.recipient.id
                 m.reply = new Sender(that.config, message.recipient.id, that.emmiter)
                 that.emitter.emit('echo', m, message)
+                ctx.status = 200
+                return
+              }
+
+              if(message.pass_thread_control) {
+                const m = this._formHandoverData(message, 'pass_thread_control', 'new_owner_app_id')
+                that.emitter.emit('handover_thread_received', m, message)
+                ctx.status = 200
+                return
+              } else if(message.take_thread_control) {
+                const m = this._formHandoverData(message, 'take_thread_control', 'previous_owner_app_id')
+                that.emitter.emit('handover_thread_taken', m, message)
+                ctx.status = 200
+                return
+              } else if(message.request_thread_control) {
+                const m = this._formHandoverData(message, 'request_thread_control', 'requested_owner_app_id')
+                that.emitter.emit('handover_thread_requested', m, message)
+                ctx.status = 200
+                return
+              } else if(message.app_roles) {
+                const m = {
+                  timestamp: message.timestamp,
+                  roles: []
+                }
+                for(const k of Object.keys(message.app_roles)) {
+                  m.roles.push({
+                    app_id: k,
+                    roles: message.app_roles[k]
+                  })
+                }
+                that.emitter.emit('handover_roles_changed', m, message)
                 ctx.status = 200
                 return
               }
