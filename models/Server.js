@@ -56,6 +56,15 @@ class Server {
         } else if (attachment.type === 'image') {
           m.url = attachment.payload.url
           that.emitter.emit(evPrefix + 'image', m, message)
+        } else if (attachment.type === 'video') {
+          m.url = attachment.payload.url
+          that.emitter.emit(evPrefix + 'video', m, message)
+        } else if(attachment.type === 'audio') {
+          m.url = attachment.payload.url
+          that.emitter.emit(evPrefix + 'audio', m, message)
+        } else if(attachment.type === 'file') {
+          m.url = attachment.payload.url
+          that.emitter.emit(evPrefix + 'file', m, message)
         } else if (attachment.type === 'fallback') {
           m.url = attachment.url
           m.title = attachment.title
