@@ -34,6 +34,58 @@ class Server {
     }
   }
 
+  handleMessage(message, isStandby = false) {
+    const evPrefix = isStandby ? 'standby_' : ''
+    const m = {}
+    m.sender_id = message.sender.id
+    m.reply = new Sender(that.config, message.sender.id, that.emitter)
+    m.handover = new HandoverReply(that.config, that.emitter, message.sender.id)
+    m.timestamp = message.timestamp
+    if (message.message && message.message.text) m.text = message.message.text
+
+    that.emitter.emit(evPrefix + 'message', m, message)
+
+    if (message.read) {
+      m.watermark = message.read.watermark
+      that.emitter.emit(evPrefix + 'message_read', m, message)
+    } else if (message.message && message.message.attachments) {
+      message.message.attachments.map(attachment => {
+        if (attachment.type === 'location') {
+          m.location = attachment.payload.coordinates
+          that.emitter.emit(evPrefix + 'location', m, message)
+        } else if (attachment.type === 'image') {
+          m.url = attachment.payload.url
+          that.emitter.emit(evPrefix + 'image', m, message)
+        } else if (attachment.type === 'fallback') {
+          m.url = attachment.url
+          m.title = attachment.title
+          m.payload = attachment.payload
+          that.emitter.emit(evPrefix + 'fallback', m, message)
+        }
+      })
+    } else if (!message.message && message.postback) {
+      m.payload = message.postback.payload
+      that.emitter.emit(evPrefix + 'postback', m, message)
+      that.emitter.emit(evPrefix + 'payload', m, message)
+    } else if (message.message && message.message.quick_reply) {
+      m.payload = message.message.quick_reply.payload
+      that.emitter.emit(evPrefix + 'quick_reply', m, message)
+      that.emitter.emit(evPrefix + 'payload', m, message)
+    } else if (m.text) {
+      that.emitter.emit(evPrefix + 'text', m, message)
+    } else if (message.referral) {
+      m.referral = message.referral
+      that.emitter.emit(evPrefix + 'referral', m, message)
+    } else if (message.optin) {
+      that.emitter.emit(evPrefix + 'optin', m, message)
+      if (message.optin.type === 'one_time_notif_req') {
+        m.token = message.optin.one_time_notif_token
+        m.payload = message.optin.payload
+        that.emitter.emit(evPrefix + 'one_time_notif_req', m, message)
+      }
+    }
+  }
+
   init () {
     router.get(this.config.endpoint, (ctx) => {
       const mode = ctx.query['hub.mode']
@@ -69,7 +121,7 @@ class Server {
                 m.app_id = message.message.app_id
                 m.timestamp = message.timestamp
                 m.recipient_id = message.recipient.id
-                m.reply = new Sender(that.config, message.recipient.id, that.emmiter)
+                m.reply = new Sender(that.config, message.recipient.id, that.emitter)
                 m.handover = new HandoverReply(this.config, this.emitter, message.recipient.id)
                 that.emitter.emit('echo', m, message)
                 ctx.status = 200
@@ -107,55 +159,27 @@ class Server {
                 return
               }
 
-              const m = {}
-              m.sender_id = message.sender.id
-              m.reply = new Sender(that.config, message.sender.id, that.emitter)
-              m.handover = new HandoverReply(this.config, this.emitter, message.sender.id)
-              m.timestamp = message.timestamp
-              if (message.message && message.message.text) m.text = message.message.text
+              this.handleMessage(message)
+              if (that.config.mark_seen) that.typer.markSeen(message.sender.id)
+            }
+          } else if (entry.standby) {
+            for (let o = 0; o < entry.standby.length; o++) {
+              const message = entry.standby[o]
 
-              that.emitter.emit('message', m, message)
-
-              if (message.read) {
-                m.watermark = message.read.watermark
-                that.emitter.emit('message_read', m, message)
-              } else if (message.message && message.message.attachments) {
-                message.message.attachments.map(attachment => {
-                  if (attachment.type === 'location') {
-                    m.location = attachment.payload.coordinates
-                    that.emitter.emit('location', m, message)
-                  } else if (attachment.type === 'image') {
-                    m.url = attachment.payload.url
-                    that.emitter.emit('image', m, message)
-                  } else if (attachment.type === 'fallback') {
-                    m.url = attachment.url
-                    m.title = attachment.title
-                    m.payload = attachment.payload
-                    that.emitter.emit('fallback', m, message)
-                  }
-                })
-              } else if (!message.message && message.postback) {
-                m.payload = message.postback.payload
-                that.emitter.emit('postback', m, message)
-                that.emitter.emit('payload', m, message)
-              } else if (message.message && message.message.quick_reply) {
-                m.payload = message.message.quick_reply.payload
-                that.emitter.emit('quick_reply', m, message)
-                that.emitter.emit('payload', m, message)
-              } else if (m.text) {
-                that.emitter.emit('text', m, message)
-              } else if (message.referral) {
-                m.referral = message.referral
-                that.emitter.emit('referral', m, message)
-              } else if (message.optin) {
-                that.emitter.emit('optin', m, message)
-                if (message.optin.type === 'one_time_notif_req') {
-                  m.token = message.optin.one_time_notif_token
-                  m.payload = message.optin.payload
-                  that.emitter.emit('one_time_notif_req', m, message)
-                }
+              if (message.message && message.message.is_echo) {
+                const m = {}
+                m.text = message.message.text
+                m.app_id = message.message.app_id
+                m.timestamp = message.timestamp
+                m.recipient_id = message.recipient.id
+                m.reply = new Sender(that.config, message.recipient.id, that.emitter)
+                m.handover = new HandoverReply(this.config, this.emitter, message.recipient.id)
+                that.emitter.emit('standby_echo', m, message)
+                ctx.status = 200
+                return
               }
-              if (that.config.mark_seen) that.typer.markSeen(m.sender_id)
+
+              this.handleMessage(message, true)
             }
           } else if (entry.changes) {
             for (let p = 0; p < entry.changes.length; p++) {
