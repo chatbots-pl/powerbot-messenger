@@ -8,6 +8,8 @@
     + [Catching events](#catching-events)
     + [Server events](#server-events)
     + [Formed Message vs Raw Message](#formed-message-vs-raw-message)
+    + [Replying to handover events](#replying-to-handover-events)
+      - [Usage example](#usage-example)
   * [Sender](#sender)
     + [Methods](#methods)
       - [`text(message, options)`](#-text-message--options--)
@@ -27,6 +29,7 @@
   * [User object](#user-object)
     + [Get user data](#get-user-data)
     + [Send message](#send-message)
+    + [Manage user's thread with Handover Protocol](#manage-user-s-thread-with-handover-protocol)
   * [Static elements](#static-elements)
     + [`pbm.send.setting(data)`](#-pbmsendsetting-data--)
       - [Greeting](#greeting-1)
@@ -117,7 +120,7 @@ app.listen(3000)
 Now server is listening on `/webhook`. Your console should display your verify token.
 **Server always returns status 200 to facebook!**
 
-`pbm.Server.init()` returns object which contains server and bot properties.
+`pbm.Server.init()` returns object with server and bot properties.
 
 `routes` property is passed from PowerbotMessenger Koa Router instance.
 
@@ -147,6 +150,9 @@ bot.on('text', async (message, raw) => {
 | text                      | Text message received                                                      | `formedMessage`, `rawMessage` |
 | location                  | Each message attachment with `type: 'location'`                            | `formedMessage`, `rawMessage` |
 | image                     | Each message attachment with `type: 'image'`                               | `formedMessage`, `rawMessage` |
+| video                     | Each message attachment with `type: 'video'`                               | `formedMessage`, `rawMessage` |
+| audio                     | Each message attachment with `type: 'audio'`                               | `formedMessage`, `rawMessage` |
+| file                      | Each message attachment with `type: 'file'`                                | `formedMessage`, `rawMessage` |
 | fallback                  | Each message attachment not recognized by messenger platform               | `formedMessage`, `rawMessage` |
 | payload                   | Any payload received (button or quick reply)                               | `formedMessage`, `rawMessage` |
 | postback                  | Payload from button reveived                                               | `formedMessage`, `rawMessage` |
@@ -162,8 +168,18 @@ bot.on('text', async (message, raw) => {
 | handover_thread_taken     | Thread ownership for a user has been taken away by another application     | `formedMessage`, `rawMessage` |
 | handover_thread_requested | Some app asks to take thread ownership for a user.                         | `formedMessage`, `rawMessage` |
 | handover_roles_changed    | Administrator of connected page changed Handover Protocol role of chatbot. | `formedMessage`, `rawMessage` |
-
-
+| standby_message           | Same as `message` but received on standby subscription channel             | `formedMessage`, `rawMessage` |
+| standby_message_read      | Same as `message_read` but received on standby subscription channel        | `formedMessage`, `rawMessage` |
+| standby_location          | Same as `location` but received on standby subscription channel            | `formedMessage`, `rawMessage` |
+| standby_image             | Same as `image` but received on standby subscription channel               | `formedMessage`, `rawMessage` |
+| standby_video             | Same as `video` but received on standby subscription channel               | `formedMessage`, `rawMessage` |
+| standby_audio             | Same as `audio` but received on standby subscription channel               | `formedMessage`, `rawMessage` |
+| standby_file              | Same as `file` but received on standby subscription channel                | `formedMessage`, `rawMessage` |
+| standby_fallback          | Same as `fallback` but received on standby subscription channel            | `formedMessage`, `rawMessage` |
+| standby_postback          | Same as `postback` but received on standby subscription channel            | `formedMessage`, `rawMessage` |
+| standby_quick_reply       | Same as `quick_reply` but received on standby subscription channel         | `formedMessage`, `rawMessage` |
+| standby_payload           | Same as `payload` but received on standby subscription channel             | `formedMessage`, `rawMessage` |
+| standby_text              | Same as `text` but received on standby subscription channel                | `formedMessage`, `rawMessage` |
 
 ### Formed Message vs Raw Message
 
