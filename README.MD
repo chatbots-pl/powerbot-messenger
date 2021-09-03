@@ -180,6 +180,7 @@ bot.on('text', async (message, raw) => {
 | standby_quick_reply       | Same as `quick_reply` but received on standby subscription channel         | `formedMessage`, `rawMessage` |
 | standby_payload           | Same as `payload` but received on standby subscription channel             | `formedMessage`, `rawMessage` |
 | standby_text              | Same as `text` but received on standby subscription channel                | `formedMessage`, `rawMessage` |
+| standby_echo              | Same as `echo` but received on standby subscription channel                | `formedMessage`, `rawMessage` |
 
 ### Formed Message vs Raw Message
 
