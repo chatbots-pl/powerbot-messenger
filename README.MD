@@ -1,5 +1,4 @@
 # Powerbot Messenger 🤖
-This package is based on code of incredbot library and it's continuation.
 
 - [Powerbot Messenger 🤖](#powerbot-messenger---)
   * [Including](#including)
@@ -379,6 +378,22 @@ const user = pbm.User(message.sender_id)
 await user.send.text('Hi!')
 ```
 
+### Manage user's thread with Handover Protocol
+
+You can call handover methods for managing thread with `User` object:
+```javascript
+const user = pbm.User(message.sender_id)
+
+// Pass user's thread control to another app:
+await user.handover.passThreadControl(123456789, 'optional metadata')
+
+// Request user's thread control:
+await user.handover.requestThreadControl('optional metadata')
+
+// Take control over user's thread:
+await user.handover.takeThreadControl('optional metadata')
+```
+
 ## Static elements
 
 Powerbot Messenger allows you to easily set static elements of your bot, like Get Started Button, Greeting text or persistent menu.
@@ -622,21 +637,21 @@ console.log(data)
 ```
 
 ### Handover methods as reply
-3 handover methods are available in reply object. Those variants doesn't take `userId` argument. Also names are slightly changed:
+Listed below methods are available as reply to incoming messages (just like `message.reply`).
 
 ```javascript
 // Pass sender's thread control to another app:
-await message.reply.passThreadControl(123456789, 'optional metadata')
+await message.handover.passThreadControl(123456789, 'optional metadata')
 
 // Request sender's thread control:
-await message.reply.requestThreadControl('optional metadata')
+await message.handover.requestThreadControl('optional metadata')
 
 // Take control over sender's thread:
-await message.reply.takeThreadControl('optional metadata')
+await message.handover.takeThreadControl('optional metadata')
 ```
 
 #### **Important notice**
-In some cases reply object can be supplied without recipient_id. In such case above functions will throw Graph API Error.
+In some cases handover reply object can be supplied without recipient_id. In such case above functions will throw Graph API Error.
 
 ## Comments & Posts reactions
 
