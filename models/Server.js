@@ -5,6 +5,7 @@ const Logger = require('../modules/logger')
 const Typer = require('./Typer')
 const Sender = require('./Sender.js')
 const CommentTools = require('./CommentTools.js')
+const HandoverReply = require('./HandoverReply.js')
 
 const router = new Router()
 
@@ -67,6 +68,7 @@ class Server {
                 m.timestamp = message.timestamp
                 m.recipient_id = message.recipient.id
                 m.reply = new Sender(that.config, message.recipient.id, that.emmiter)
+                m.handover = new HandoverReply(this.config, this.emitter, message.recipient.id)
                 that.emitter.emit('echo', m, message)
                 ctx.status = 200
                 return
@@ -106,6 +108,7 @@ class Server {
               const m = {}
               m.sender_id = message.sender.id
               m.reply = new Sender(that.config, message.sender.id, that.emitter)
+              m.handover = new HandoverReply(this.config, this.emitter, message.sender.id)
               m.timestamp = message.timestamp
               if (message.message && message.message.text) m.text = message.message.text
 

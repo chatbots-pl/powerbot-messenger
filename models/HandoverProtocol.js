@@ -9,7 +9,7 @@ class HandoverProtocol {
     this.api_url = config.api_url || `https://graph.facebook.com/${config.api_version}/me`
     this.token = config.access_token
     this.emitter = emitter
-    this.log = new Logger(config, 'typer', emitter)
+    this.log = new Logger(config, 'handover', emitter)
   }
 
   _createApiUrl (path) {

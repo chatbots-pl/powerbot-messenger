@@ -2,6 +2,8 @@ const axios = require('axios')
 
 const createError = require('../modules/create_error')
 
+const HandoverReply = require('./HandoverReply')
+
 let that = null
 
 class User {
@@ -11,6 +13,7 @@ class User {
     this.messenger_id = messengerId
     this.api_url = `https://graph.facebook.com/${config.api_version}/${this.messenger_id}`
     this.send = sender
+    this.handover = new HandoverReply(config, emitter, messengerId)
     this.emitter = emitter
     that = this
   }

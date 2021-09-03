@@ -7,7 +7,6 @@ const Typer = require('./Typer.js')
 const Logger = require('../modules/logger')
 
 const createError = require('../modules/create_error')
-const HandoverProtocol = require('./HandoverProtocol.js')
 
 class Sender {
   constructor (config, recipientId, emitter, recipientField = 'id') {
@@ -24,7 +23,6 @@ class Sender {
     this.log = new Logger(this.config, 'sender', emitter)
     this.emitter = emitter
     this.recipient_field = recipientField
-    this.handover = new HandoverProtocol(config, emitter)
   }
 
   async raw (message) {
@@ -152,18 +150,6 @@ class Sender {
 
     const message = new MessageFrame(new TemplateBase(optionsCopy), optionsCopy)
     return this.raw(message)
-  }
-
-  passThreadControl (appId, metadata) {
-    return this.handover.passControl(appId, this.recipient_id, metadata)
-  }
-
-  requestThreadControl (metadata) {
-    return this.handover.requestControl(this.recipient_id, metadata)
-  }
-
-  takeThreadControl (metadata) {
-    return this.handover.takeControl(this.recipient_id, metadata)
   }
 }
 
