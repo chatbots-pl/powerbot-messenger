@@ -9,7 +9,7 @@
   "author": "Maksymilian Tomczyk <m.tomczyk.dev@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.21.4",
     "koa-router": "^7.4.0"
   },
   "devDependencies": {
