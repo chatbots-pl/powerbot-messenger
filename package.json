@@ -13,8 +13,10 @@
     "koa-router": "^7.4.0"
   },
   "devDependencies": {
+    "@types/node": "^20.12.7",
     "chai": "^4.2.0",
-    "mocha": "^9.1.1"
+    "mocha": "^9.1.1",
+    "typescript": "^5.4.5"
   },
   "directories": {
     "test": "test"
